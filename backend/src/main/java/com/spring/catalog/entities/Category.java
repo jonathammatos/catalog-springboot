@@ -1,11 +1,15 @@
 package com.spring.catalog.entities;
 
 import java.io.Serializable;
+import java.time.Instant;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 @Entity	 // indica que é uma classe entidade e que vai representa uma tabela no  banco de dados
@@ -18,6 +22,13 @@ public class Category implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
+	
+	// TIMESTAMP WITHOUT TIME ZONE = guarda data/hora sem fuso horário no banco
+	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+	private Instant createdAt;
+	
+	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+	private Instant updatedAt;
 	
 	
 	public Category () {
@@ -48,6 +59,39 @@ public class Category implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+
+	public Instant getCreatedAt() {
+		return createdAt;
+	}
+
+
+	public void setCreatedAt(Instant createdAt) {
+		this.createdAt = createdAt;
+	}
+
+
+	public Instant getUpdatedAt() {
+		return updatedAt;
+	}
+
+
+	public void setUpdatedAt(Instant updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+	
+	
+	// roda automaticamente ANTES de inserir no banco (INSERT)
+	@PrePersist
+	public void prePersist() {
+		this.createdAt = Instant.now();
+	}
+	
+	// roda automaticamente ANTES de atualizar no banco (UPDATE)
+	@PreUpdate
+	public void preUpdate() {
+		this.updatedAt = Instant.now();
 	}
 
 
